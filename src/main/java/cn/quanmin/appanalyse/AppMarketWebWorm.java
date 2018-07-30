@@ -261,47 +261,51 @@ public class AppMarketWebWorm {
         }
         int apkCount = 0;
         for (Apk apk : apkSet) {
-            URL apkURL = new URL(apk.getApkUrl());
-            if (writer != null) {
-                writer.write(apk.getAppName() + "\t" + apk.getAppDownCount() + "\t" + apk.getAppSize() + "\n");
-            }
-            HttpURLConnection urlConnection = (HttpURLConnection) apkURL.openConnection();
-
-            // 得到输入流
-            InputStream inputStream = urlConnection.getInputStream();
-            // 获取自己数组
-            byte[] getData = readInputStream(inputStream);
-
-            // 文件保存位置
-            File file = new File(apkDownloadDest);
-            if (file.exists()) {
-                file.delete();
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(getData);
-            fos.flush();
-            if (fos != null) {
-                fos.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-
-            // 处理 apk
-            Set<ApkPackage> apkPackageSet = extracPackageFromApk(file);
-            for (ApkPackage apkPackage : apkPackageSet) {
-                if (packageMap.containsKey(apkPackage)) {
-                    int count = packageMap.get(apkPackage);
-                    packageMap.put(apkPackage, ++count);
-                } else {
-                    packageMap.put(apkPackage, 1);
+            try {
+                URL apkURL = new URL(apk.getApkUrl());
+                if (writer != null) {
+                    writer.write(apk.getAppName() + "\t" + apk.getAppDownCount() + "\t" + apk.getAppSize() + "\n");
                 }
-            }
+                HttpURLConnection urlConnection = (HttpURLConnection) apkURL.openConnection();
 
-            apkCount++;
-            if (apkCount > 10000) {
-                break;
+                // 得到输入流
+                InputStream inputStream = urlConnection.getInputStream();
+                // 获取自己数组
+                byte[] getData = readInputStream(inputStream);
+
+                // 文件保存位置
+                File file = new File(apkDownloadDest);
+                if (file.exists()) {
+                    file.delete();
+                }
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(getData);
+                fos.flush();
+                if (fos != null) {
+                    fos.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                // 处理 apk
+                Set<ApkPackage> apkPackageSet = extracPackageFromApk(file);
+                for (ApkPackage apkPackage : apkPackageSet) {
+                    if (packageMap.containsKey(apkPackage)) {
+                        int count = packageMap.get(apkPackage);
+                        packageMap.put(apkPackage, ++count);
+                    } else {
+                        packageMap.put(apkPackage, 1);
+                    }
+                }
+
+                apkCount++;
+            } catch (Exception e) {
+
             }
+//            if (apkCount > 10000) {
+//                break;
+//            }
         }
 
         if (writer != null) {
