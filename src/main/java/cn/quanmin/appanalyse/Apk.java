@@ -6,7 +6,7 @@ package cn.quanmin.appanalyse;
 public class Apk {
     private String appName;
     private String apkUrl;
-    private long appSize; // 单位 M
+    private float appSize; // 单位 KB
     private String packageName;
     private int appDownCount;
 
@@ -26,11 +26,11 @@ public class Apk {
         this.apkUrl = apkUrl;
     }
 
-    public long getAppSize() {
+    public float getAppSize() {
         return appSize;
     }
 
-    public void setAppSize(long appSize) {
+    public void setAppSize(float appSize) {
         this.appSize = appSize;
     }
 
