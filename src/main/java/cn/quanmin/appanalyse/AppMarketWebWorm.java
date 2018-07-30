@@ -133,7 +133,6 @@ public class AppMarketWebWorm {
         }
         br.close();
 
-
         // 特殊标记
         String pnAttr = "data-pn=\"";
         String appDesc = "class=\"app-desc\"";
@@ -143,6 +142,7 @@ public class AppMarketWebWorm {
         String installCls = "class=\"i-source install-btn \"";
         String tagEnd = "\">";
 
+        test:
         for (String category : cateList) { // 某一个分类下面
             int pageIndex = 1;
             while (true) {
@@ -202,6 +202,10 @@ public class AppMarketWebWorm {
                         continue;
                     }
                     apkSet.add(apk);
+
+//                    if (apkSet.size() >= 10) {
+//                        break test;
+//                    }
                 }
 
                 pageIndex++;
@@ -248,9 +252,19 @@ public class AppMarketWebWorm {
 
         Map<ApkPackage, Integer> packageMap = new HashMap<>();
 
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter("/Users/liquanmin/Downloads/appstat.txt");
+            writer.write("App 名\t安装量\tApp 大小(KB)\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         int apkCount = 0;
         for (Apk apk : apkSet) {
             URL apkURL = new URL(apk.getApkUrl());
+            if (writer != null) {
+                writer.write(apk.getAppName() + "\t" + apk.getAppDownCount() + "\t" + apk.getAppSize() + "\n");
+            }
             HttpURLConnection urlConnection = (HttpURLConnection) apkURL.openConnection();
 
             // 得到输入流
@@ -290,12 +304,17 @@ public class AppMarketWebWorm {
             }
         }
 
+        if (writer != null) {
+            writer.flush();
+            writer.close();
+        }
+
         // map转换成list进行排序
         List<Map.Entry<ApkPackage, Integer>> list = new ArrayList<Map.Entry<ApkPackage, Integer>>(packageMap.entrySet());
         // 排序
         Collections.sort(list, valueComparator);
         // 默认情况下，TreeMap对key进行升序排序
-        System.out.println("------------ map 按照 value 升序排序--------------------");
+        System.out.println("--------------- 库使用降序 ---------------");
         for (Map.Entry<ApkPackage, Integer> entry : list) {
             System.out.println(entry.getKey().getPackageName() + " : " + entry.getValue());
         }
