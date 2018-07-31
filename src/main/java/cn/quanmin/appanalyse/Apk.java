@@ -8,7 +8,7 @@ public class Apk {
     private String apkUrl;
     private float appSize; // 单位 KB
     private String packageName;
-    private int appDownCount;
+    private long appDownCount;
 
     public String getAppName() {
         return appName;
@@ -42,11 +42,11 @@ public class Apk {
         this.packageName = packageName;
     }
 
-    public int getAppDownCount() {
+    public long getAppDownCount() {
         return appDownCount;
     }
 
-    public void setAppDownCount(int appDownCount) {
+    public void setAppDownCount(long appDownCount) {
         this.appDownCount = appDownCount;
     }
 

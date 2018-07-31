@@ -174,7 +174,7 @@ public class AppMarketWebWorm {
 
                     // 解析 count
                     String tempStr = countStr.substring(0, countStr.length() - 1);
-                    int count = (int) (Float.parseFloat(tempStr) * (countStr.endsWith("万") ? 10000 : 100000000));
+                    long count = (long) (Float.parseFloat(tempStr) * (countStr.endsWith("万") ? 10000 : 100000000));
 
                     pageInfo = pageInfo.substring(pageInfo.indexOf(sizeAttr) + sizeAttr.length());
                     String sizeStr = pageInfo.substring(0, pageInfo.indexOf(tagEnd));
@@ -198,7 +198,7 @@ public class AppMarketWebWorm {
                     apk.setAppSize(size);
                     apk.setPackageName(packageName);
 
-                    if (apk.getAppDownCount() < 200 * 10000) { // 200w 以下不做统计
+                    if (apk.getAppDownCount() < 1000 * 10000) { // 200w 以下不做统计
                         continue;
                     }
                     apkSet.add(apk);
@@ -263,6 +263,7 @@ public class AppMarketWebWorm {
         for (Apk apk : apkSet) {
             try {
                 URL apkURL = new URL(apk.getApkUrl());
+                System.out.println(apk.getAppName() + "...");
                 if (writer != null) {
                     writer.write(apk.getAppName() + "\t" + apk.getAppDownCount() + "\t" + apk.getAppSize() + "\n");
                 }
